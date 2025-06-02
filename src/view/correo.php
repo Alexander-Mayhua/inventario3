@@ -79,6 +79,7 @@
       <h2 style="color: white;">I.E.S.P. "HUANTA"</h2>
     </div>
     <div class="content">
+    <h1>Hola [Alexander Mayhua Valencia],</h1>
     <p>
   Hemos recibido una solicitud para restablecer tu contraseña de acceso al sistema de inventario de la I.E.S.P. "HUANTA".
 </p>
