@@ -206,9 +206,9 @@ try {
     <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Correo Empresarial</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Correo Institucional - I.E.S.P. "HUANTA"</title>
   <style>
     body {
       margin: 0;
@@ -228,6 +228,14 @@ try {
       color: white;
       padding: 20px;
       text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+    .header img {
+      height: 50px;
+      width: auto;
     }
     .content {
       padding: 30px;
@@ -257,7 +265,10 @@ try {
       color: #666666;
     }
     @media screen and (max-width: 600px) {
-      .content, .header, .footer {
+      .header {
+        flex-direction: column;
+      }
+      .content, .footer {
         padding: 15px !important;
       }
       .button {
@@ -269,26 +280,27 @@ try {
 <body>
   <div class="container">
     <div class="header">
-      <h2>Nombre de tu empresa</h2>
+      <img src="https://www.iestphuanta.edu.pe/sacademica/img/logo1.png" alt="Logo IESP Huanta" />
+      <h2 style="color: white;">I.E.S.P. "HUANTA"</h2>
     </div>
     <div class="content">
-      <h1>Hola [Nombre del cliente],</h1>
-      <p>
-        Te saludamos cordialmente. Queremos informarte sobre nuestras últimas novedades y promociones exclusivas para ti.
-      </p>
-      <p>
-        ¡No te pierdas nuestras ofertas especiales por tiempo limitado!
-      </p>
-      <a href="https://www.tusitio.com/promocion" class="button">Ver más</a>
-      <p>Gracias por confiar en nosotros.</p>
+    <p>
+  Hemos recibido una solicitud para restablecer tu contraseña de acceso al sistema de inventario de la I.E.S.P. "HUANTA".
+</p>
+<p>
+  Si realizaste esta solicitud, haz clic en el siguiente botón para establecer una nueva contraseña. Este enlace estará disponible por tiempo limitado.
+</p>
+<a href="https://www.iesphuanta.edu.pe/restablecer" class="button">Cambiar contraseña</a>
+      <p>Gracias por formar parte de nuestra comunidad educativa.</p>
     </div>
     <div class="footer">
-      © 2025 Nombre de tu empresa. Todos los derechos reservados.<br>
-      <a href="https://www.tusitio.com/desuscribirse">Cancelar suscripción</a>
+      © 2025 I.E.S.P. "HUANTA". Todos los derechos reservados.<br>
+      <a href="https://www.iesphuanta.edu.pe/desuscribirse">Cancelar suscripción</a>
     </div>
   </div>
 </body>
-</html>';
+</html>'
+;
    
 
     $mail->send();
