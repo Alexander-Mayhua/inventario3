@@ -22,6 +22,20 @@ $objAdmin = new AdminModel();
 $id_sesion = $_POST['sesion'];
 $token = $_POST['token'];
 
+//token de correo
+if ($tipo == "validar_datos_reset_possword") {
+  $id_email = $_POST['id'];
+  $token_email = $_POST['token'];
+  $arr_Respuesta = array('status'=> false, 'msg'=>'link caducado');
+  $datos_usuario=$objUsuario->buscarUsuarioByDni($id_email);
+  if ($datos_usuario->reset_password==1 && password_verify($datos_usuario->token_password,$token_email)) {
+    $arr_Respuesta = array('status'=> true, 'msg'=>'ok');
+  }
+  echo json_encode($arr_Respuesta);
+}
+
+
+
 if ($tipo == "listar_usuarios_ordenados_tabla") {
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
@@ -161,6 +175,7 @@ if($tipo="sent_email_password"){
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
     $datos_sesion=$objSesion->buscarSesionLoginById($id_sesion);
     $datos_usuario = $objUsuario->buscarUsuarioById($datos_sesion->id_usuario);
+    $datosusuario = $datos_usuario->nombres_apellidos;
     $llave=$objAdmin->generar_llave(30);
     $token= password_hash($llave,PASSWORD_DEFAULT);
     $update=$objUsuario->updateResetPassword($datos_sesion->id_usuario,$llave,1);
@@ -284,14 +299,14 @@ try {
       <h2 style="color: white;">I.E.S.P. "HUANTA"</h2>
     </div>
     <div class="content">
-     <h1>Hola [Alexander Mayhua Valencia],</h1>
+     <h1>Hola'  .$datosusuario.' </h1>
     <p>
   Hemos recibido una solicitud para restablecer tu contraseña de acceso al sistema de inventario de la I.E.S.P. "HUANTA".
 </p>
 <p>
   Si realizaste esta solicitud, haz clic en el siguiente botón para establecer una nueva contraseña. Este enlace estará disponible por tiempo limitado.
 </p>
-<a href="https://www.iesphuanta.edu.pe/restablecer" class="button">Cambiar contraseña</a>
+<a href="'.BASE_URL.'reset-password?data='.$datos_usuario->id. '&data2='.$token.'" class="button">Cambiar contraseña</a>
       <p>Gracias por formar parte de nuestra comunidad educativa.</p>
     </div>
     <div class="footer">
