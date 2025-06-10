@@ -236,7 +236,7 @@ try {
       border: 1px solid #dddddd;
     }
     .header {
-      background-color: #900C3F;
+      background-color:rgb(9, 16, 219);
       color: white;
       padding: 20px;
       text-align: center;
@@ -254,7 +254,7 @@ try {
     }
     .button {
       display: inline-block;
-      background-color: #900C3F;
+      background-color:rgb(9, 16, 219);
       color: #ffffff !important;
       padding: 12px 25px;
       margin: 20px 0;
@@ -281,13 +281,13 @@ try {
 <body>
   <div class="container">
    <div class="header" style="display: flex; align-items: center; justify-content: center; gap: 15px;">
-  <img src="https://ipeg.edu.pe/wp-content/uploads/2024/10/customer39d.png" alt="Logo del instituto" style="height: 70px;">
-  <h2 style="color: white; margin: 0; font-size: 20px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE HUANTA</h2>
+  <img src="https://iestphuanta.edu.pe/wp-content/uploads/2021/12/logo_tecno-1-2.png" alt="Logo del instituto" style="height: 70px;">
+  <h2 style="color: white; margin: 0; font-size: 20px;">I.E.S.P "HUANTA"</h2>
 </div>
    <div class="content">
   <h1>Hola ' .$datosusuario.'  </h1>
   <p>
-    Te saludamos cordialmente. Hemos recibido una solicitud para restablecer tu contraseña en la plataforma de la UNIVERSIDAD NACIONAL AUTÓNOMA DE HUANTA.
+    Te saludamos cordialmente. Hemos recibido una solicitud para restablecer tu contraseña en la plataforma de la I.E.S.P "HUANTA".
   </p>
   <p>
     Si realizaste esta solicitud, por favor haz clic en el siguiente enlace para crear una nueva contraseña de forma segura.
@@ -300,7 +300,7 @@ try {
 </div>
 
     <div class="footer">
-      © 2025 UNIVERSIDAD NACIONAL AUTÓNOMA DE HUANTA. Todos los derechos reservados.<br>
+      © 2025 Instituto de Educación Superior Tecnológico  Público “Huanta”. Todos los derechos reservados.<br>
       <a href="https://www.tusitio.com/desuscribirse">Cancelar suscripción</a>
     </div>
   </div>

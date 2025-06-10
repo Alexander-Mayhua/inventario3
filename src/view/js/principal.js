@@ -177,14 +177,14 @@ async function validar_datos_reset_password(){
     formData.append('token', token);
     formData.append('sesion', '');
     try {
-        let respuesta = await fetch(base_url + 'src/control/usuario.php?tipo=validar_datos_reset_password', {
+        let respuesta = await fetch(base_url_server + 'src/control/usuario.php?tipo=validar_datos_reset_password', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
             body: formData
         });
         let json = await respuesta.json();
-        if (json.status = false) {
+        if (json.status == false) {
             Swal.fire({
                 type: 'error',
                 title: 'Error de link',
@@ -203,8 +203,8 @@ async function validar_datos_reset_password(){
     }
 }
 function validar_imputs_password() {
-    let pass1= document.getElementById('password').value;
-    let pass2= document.getElementById('password1').value;
+    let pass1 = document.getElementById('password').value;
+    let pass2 = document.getElementById('password1').value;
     if (pass1 !== pass2) {
         Swal.fire({
             type: 'error',
