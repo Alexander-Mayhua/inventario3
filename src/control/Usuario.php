@@ -1,18 +1,19 @@
 <?php
-
-
 session_start();
 require_once('../model/admin-sesionModel.php');
 require_once('../model/admin-usuarioModel.php');
 require_once('../model/adminModel.php');
 
 require '../../vendor/autoload.php';
-
+require '../../vendor/phpmailer/phpmailer/src/Exception.php';
+require '../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require '../../vendor/phpmailer/phpmailer/src/SMTP.php';
 
 $tipo = $_GET['tipo'];
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+
 //instanciar la clase categoria model
 $objSesion = new SessionModel();
 $objUsuario = new UsuarioModel();
@@ -22,19 +23,16 @@ $objAdmin = new AdminModel();
 $id_sesion = $_POST['sesion'];
 $token = $_POST['token'];
 
-//token de correo
-if ($tipo == "validar_datos_reset_possword") {
+if ($tipo == "validar_datos_reset_password") {
   $id_email = $_POST['id'];
   $token_email = $_POST['token'];
-  $arr_Respuesta = array('status'=> false, 'msg'=>'link caducado');
-  $datos_usuario=$objUsuario->buscarUsuarioByDni($id_email);
+  $arr_Respuesta = array('status' => false, 'msg' => 'link caducado');
+  $datos_usuario = $objUsuario->buscarUsuarioById($id_email);
   if ($datos_usuario->reset_password==1 && password_verify($datos_usuario->token_password,$token_email)) {
-    $arr_Respuesta = array('status'=> true, 'msg'=>'ok');
+    $arr_Respuesta = array('status' => true, 'msg' => 'ok');
   }
   echo json_encode($arr_Respuesta);
 }
-
-
 
 if ($tipo == "listar_usuarios_ordenados_tabla") {
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
@@ -86,7 +84,7 @@ if ($tipo == "registrar") {
             $password = $_POST['password'];
             $secure_password = password_hash($password,PASSWORD_DEFAULT);
 
-            if ($dni == "" || $apellidos_nombres == "" || $correo == "" || $telefono == "" || $password == "") {
+            if ($dni == "" || $apellidos_nombres == "" || $correo == "" || $telefono == "" ||  $password == "" ) {
                 //repuesta
                 $arr_Respuesta = array('status' => false, 'mensaje' => 'Error, campos vacíos');
             } else {
@@ -166,44 +164,44 @@ if ($tipo == "reiniciar_password") {
         }
     }
     echo json_encode($arr_Respuesta);
-
- 
 }
-
-if($tipo="sent_email_password"){
+if ($tipo=="sent_email_password") {
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
-    $datos_sesion=$objSesion->buscarSesionLoginById($id_sesion);
-    $datos_usuario = $objUsuario->buscarUsuarioById($datos_sesion->id_usuario);
-    $datosusuario = $datos_usuario->nombres_apellidos;
-    $llave=$objAdmin->generar_llave(30);
-    $token= password_hash($llave,PASSWORD_DEFAULT);
-    $update=$objUsuario->updateResetPassword($datos_sesion->id_usuario,$llave,1);
-    if ($update) {
-       //Import PHPMailer classes into the global namespace
+        $datos_sesion = $objSesion->buscarSesionLoginById($id_sesion);
+        $datos_usuario = $objUsuario->buscarUsuarioById($datos_sesion->id_usuario);
+        $datosusuario = $datos_usuario->nombres_apellidos;
+        $llave = $objAdmin->generar_llave(30);
+        $token = password_hash($llave, PASSWORD_DEFAULT);
+        $update = $objUsuario->updateResetPassword($datos_sesion->id_usuario, $llave, 1);
+        if($update){
+           //Import PHPMailer classes into the global namespace
 //These must be at the top of your script, not inside a function
+
 
 //Load Composer's autoloader (created by composer, not included with PHPMailer)
 
 
-//Create an instance; passing `true` enables exceptions
+
+
+//Create an instance; passing true enables exceptions
 $mail = new PHPMailer(true);
 
 try {
-    //Server settings
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-    $mail->isSMTP();                                            //Send using SMTP
-    $mail->Host       = 'mail.desarrolloweb2025.com';                     //Set the SMTP server to send through
-    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $mail->Username   = 'alexander21@desarrolloweb2025.com';                     //SMTP username
-    $mail->Password   = 'G!l(X(gN@Vyz';                               //SMTP password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+  //Server settings
+  $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+  $mail->isSMTP();                                            //Send using SMTP
+  $mail->Host       = 'mail.desarrolloweb2025.com';                     //Set the SMTP server to send through
+  $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+  $mail->Username   = 'alexander21@desarrolloweb2025.com';                     //SMTP username
+  $mail->Password   = 'G!l(X(gN@Vyz';                               //SMTP password
+  $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+  $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
-    //Recipients
-    $mail->setFrom('alexander21@desarrolloweb2025.com', 'cambio de contraseña');
-    $mail->addAddress($datos_usuario->correo, $datos_usuario->nombres_apellidos);     //Add a recipient
-   /* $mail->addAddress('ellen@example.com');               //Name is optional
+  //Recipients
+  $mail->setFrom('alexander21@desarrolloweb2025.com', 'cambio de contraseña');
+  $mail->addAddress($datos_usuario->correo, $datos_usuario->nombres_apellidos);     //Add a recipient
+    /*$mail->addAddress('ellen@example.com');               //Name is optional
     $mail->addReplyTo('info@example.com', 'Information');
     $mail->addCC('cc@example.com');
     $mail->addBCC('bcc@example.com');
@@ -211,19 +209,18 @@ try {
     //Attachments
     $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
     $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
-*/
+    */
     //Content
-    $mail->isHTML(true);                                  //Set email format to HTML
-    $mail->charSet = 'UTF-8';
-    $mail->Subject = 'Cambio de Contraseña - sistema de inventario';
-
+    $mail->isHTML(true);     
+    $mail->CharSet= 'UTF-8';                             //Set email format to HTML
+    $mail->Subject = 'cambio de contraseña - sistema inventario';
     $mail->Body    = '
-    <!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Correo Institucional - I.E.S.P. "HUANTA"</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Correo Empresarial</title>
   <style>
     body {
       margin: 0;
@@ -239,18 +236,10 @@ try {
       border: 1px solid #dddddd;
     }
     .header {
-      background-color: #004aad;
+      background-color: #900C3F;
       color: white;
       padding: 20px;
       text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-    }
-    .header img {
-      height: 50px;
-      width: auto;
     }
     .content {
       padding: 30px;
@@ -265,7 +254,7 @@ try {
     }
     .button {
       display: inline-block;
-      background-color: #004aad;
+      background-color: #900C3F;
       color: #ffffff !important;
       padding: 12px 25px;
       margin: 20px 0;
@@ -280,10 +269,7 @@ try {
       color: #666666;
     }
     @media screen and (max-width: 600px) {
-      .header {
-        flex-direction: column;
-      }
-      .content, .footer {
+      .content, .header, .footer {
         padding: 15px !important;
       }
       .button {
@@ -294,29 +280,33 @@ try {
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <img src="https://www.iestphuanta.edu.pe/sacademica/img/logo1.png" alt="Logo IESP Huanta" />
-      <h2 style="color: white;">I.E.S.P. "HUANTA"</h2>
-    </div>
-    <div class="content">
-     <h1>Hola'  .$datosusuario.' </h1>
-    <p>
-  Hemos recibido una solicitud para restablecer tu contraseña de acceso al sistema de inventario de la I.E.S.P. "HUANTA".
-</p>
-<p>
-  Si realizaste esta solicitud, haz clic en el siguiente botón para establecer una nueva contraseña. Este enlace estará disponible por tiempo limitado.
-</p>
-<a href="'.BASE_URL.'reset-password?data='.$datos_usuario->id. '&data2='.$token.'" class="button">Cambiar contraseña</a>
-      <p>Gracias por formar parte de nuestra comunidad educativa.</p>
-    </div>
+   <div class="header" style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+  <img src="https://ipeg.edu.pe/wp-content/uploads/2024/10/customer39d.png" alt="Logo del instituto" style="height: 70px;">
+  <h2 style="color: white; margin: 0; font-size: 20px;">UNIVERSIDAD NACIONAL AUTÓNOMA DE HUANTA</h2>
+</div>
+   <div class="content">
+  <h1>Hola ' .$datosusuario.'  </h1>
+  <p>
+    Te saludamos cordialmente. Hemos recibido una solicitud para restablecer tu contraseña en la plataforma de la UNIVERSIDAD NACIONAL AUTÓNOMA DE HUANTA.
+  </p>
+  <p>
+    Si realizaste esta solicitud, por favor haz clic en el siguiente enlace para crear una nueva contraseña de forma segura.
+  </p>
+  <a href="'.BASE_URL.'reset-password/?data='.$datos_usuario->id.'&data2='.urlencode($token).'" class="button">Cambiar contraseña</a>
+  <p>
+    Si no solicitaste este cambio, puedes ignorar este mensaje. Tu información permanecerá segura.
+  </p>
+  <p>Gracias por confiar en nosotros.</p>
+</div>
+
     <div class="footer">
-      © 2025 I.E.S.P. "HUANTA". Todos los derechos reservados.<br>
-      <a href="https://www.iesphuanta.edu.pe/desuscribirse">Cancelar suscripción</a>
+      © 2025 UNIVERSIDAD NACIONAL AUTÓNOMA DE HUANTA. Todos los derechos reservados.<br>
+      <a href="https://www.tusitio.com/desuscribirse">Cancelar suscripción</a>
     </div>
   </div>
 </body>
-</html>'
-;
+</html>
+    ';
    
 
     $mail->send();
@@ -324,9 +314,10 @@ try {
 } catch (Exception $e) {
     echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
 }
-    }else{
-        echo "fallo de actualizacion";
+
+        }else {
+            echo "fallo al actualizar";
+        }
+        //print_r($token);
     }
-    //print_r($token);
-      }
-    }
+}

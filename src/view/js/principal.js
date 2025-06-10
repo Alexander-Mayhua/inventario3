@@ -175,6 +175,7 @@ async function validar_datos_reset_password(){
     const formData = new FormData();
     formData.append('id', id);
     formData.append('token', token);
+    formData.append('sesion', '');
     try {
         let respuesta = await fetch(base_url + 'src/control/usuario.php?tipo=validar_datos_reset_password', {
             method: 'POST',
@@ -183,11 +184,59 @@ async function validar_datos_reset_password(){
             body: formData
         });
         let json = await respuesta.json();
-        if (json.status) {
-           
+        if (json.status = false) {
+            Swal.fire({
+                type: 'error',
+                title: 'Error de link',
+                text: "link Caducada, verifique su link",
+                confirmButtonClass: 'btn btn-confirm mt-2',
+                footer: '',
+                timer: 1000
+            });
+          //  location.replace(base_url + "login");
+        let formulario= document.getElementById('frm_reset-password');
+        formulario.innerHTML = 'texto de prueba';
         }
         //console.log(respuesta);
     } catch (e) {
         console.log("Error al validar los datos" + e);
     }
+}
+function validar_imputs_password() {
+    let pass1= document.getElementById('password').value;
+    let pass2= document.getElementById('password1').value;
+    if (pass1 !== pass2) {
+        Swal.fire({
+            type: 'error',
+            title: 'Error ',
+            text: "contraseña no coinciden",
+            confirmButtonClass: 'btn btn-confirm mt-2',
+            footer: '',
+            timer: 1000
+        });
+        return;
+
+      //  location.replace(base_url + "login");
+    }
+    if (pass1.length<8 && pass2.length<8) {
+        Swal.fire({
+            type: 'error',
+            title: 'Error ',
+            text: "la contraseña tiene que ser minimo 8 caracteres",
+            confirmButtonClass: 'btn btn-confirm mt-2',
+            footer: '',
+            timer: 1000
+        });
+        return;
+    } else{
+        actualizar_password();
+    }
+
+}
+
+async function actualizar_password() {
+   // eviar informacion de password y id al controlador usuario
+   //recibir informacion y incriptarla nueva contraseña 
+   //guardar en base de datos y actualizar campo de reset_password = 0y token_password=''
+//modificar a usuario sobre el estado del del proceso
 }

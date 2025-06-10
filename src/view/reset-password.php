@@ -92,7 +92,7 @@
 
 <body>
     <input type="hidden" id="data" value="<?php echo $_GET['data'] ?>">
-    <input type="hidden" id="data2" value="<?php echo $_GET['data2'] ?>">
+    <input type="hidden" id="data2" value="<?php echo urlencode($_GET['data2'])?>">
   <div class="login-container">
     <h3>Cambiar Contraseña</h3>
     <img src="https://sispa.iestphuanta.edu.pe/img/logo.png" alt="" width="100%">
@@ -100,13 +100,16 @@
     <form id="frm_reset-password">
      
       <input type="password" name="password" id="password" placeholder="Nuevo contraseña " required>
-      <input type="password" name="password" id="password" placeholder="confirmar contraseña" required>
-      <button type="submit">actualizar contraseña</button>
+      <input type="password" name="password" id="password1" placeholder="confirmar contraseña" required>
+      <button type="button" onclick= "validar_imputs_password();" >actualizar contraseña</button>
     </form>
    
   </div>
 </body>
 <script src="<?php echo BASE_URL; ?>src/view/js/principal.js"></script>
+<script>
+ validar_datos_reset_password();
+</script>
 <!-- Sweet Alerts Js-->
 <script src="<?php echo BASE_URL ?>src/view/pp/plugins/sweetalert2/sweetalert2.min.js"></script>
 
