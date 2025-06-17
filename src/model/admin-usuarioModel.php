@@ -10,7 +10,7 @@ class UsuarioModel
         $this->conexion = new Conexion();
         $this->conexion = $this->conexion->connect();
     }
-    public function registrarUsuario($dni, $apellidos_nombres,$correo, $telefono, $password)
+    public function registrarUsuario($dni, $apellidos_nombres, $correo, $telefono, $password)
     {
         $sql = $this->conexion->query("INSERT INTO usuarios (dni, nombres_apellidos, correo, telefono, password) VALUES ('$dni','$apellidos_nombres','$correo','$telefono','$password')");
         if ($sql) {
@@ -25,33 +25,14 @@ class UsuarioModel
         $sql = $this->conexion->query("UPDATE usuarios SET dni='$dni',nombres_apellidos='$nombres_apellidos',correo='$correo',telefono='$telefono',estado ='$estado' WHERE id='$id'");
         return $sql;
     }
-    
 
 
-    
     public function actualizarPassword($id, $password)
     {
 
         $sql = $this->conexion->query("UPDATE usuarios SET password ='$password' WHERE id='$id'");
         return $sql;
     }
-    
-    // Nuevo método para actualizar contraseña y limpiar datos de reset
- public function guardarNewPassword($id, $password)
-{
-    $conexion = $this->conexion;
-    $password_secure = password_hash($password, PASSWORD_DEFAULT);
-
-    $sql = "UPDATE usuarios SET password = ?, reset_password = 0, token_password = '' WHERE id = ?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->bind_param("si", $password_secure, $id);
-
-    return $stmt->execute();
-}
-
-
-
-
 
     public function updateResetPassword($id, $token, $estado)
     {
@@ -98,7 +79,7 @@ class UsuarioModel
         }
         return $arrRespuesta;
     }
-   
+
     public function buscarUsuariosOrderByApellidosNombres_tabla_filtro($busqueda_tabla_dni, $busqueda_tabla_nomap, $busqueda_tabla_estado)
     {
         //condicionales para busqueda
@@ -131,8 +112,17 @@ class UsuarioModel
         return $arrRespuesta;
     }
 
-
-
     
-
+     // Nuevo método para actualizar contraseña y limpiar datos de reset
+     public function guardarNewPassword($id, $password)
+     {
+         $conexion = $this->conexion;
+         $password_secure = password_hash($password, PASSWORD_DEFAULT);
+ 
+         $sql = "UPDATE usuarios SET password = ?, reset_password = 0, token_password = '' WHERE id = ?";
+         $stmt = $conexion->prepare($sql);
+         $stmt->bind_param("si", $password_secure, $id);
+ 
+         return $stmt->execute();
+     }
 }

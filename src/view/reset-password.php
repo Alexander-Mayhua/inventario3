@@ -101,7 +101,7 @@
      
       <input type="text" name="password" id="password" placeholder="Nuevo contraseña " required>
       <input type="text" name="password1" id="password1" placeholder="confirmar contraseña" required>
-      <button type="button" onclick= "validar_imputs_password();" >actualizar contraseña</button>
+      <button type="button" onclick= "validar_imputs_password();">actualizar contraseña</button>
     </form>
    
   </div>

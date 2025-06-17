@@ -269,7 +269,7 @@ async function actualizar_password() {
 
             Swal.fire({
                 type: 'success',
-                title: '¡Contraseña actualizada!',
+                title: '¡ACTUALIZADO CON EXITO!',
                 text: json.msg,
                 confirmButtonClass: 'btn btn-confirm mt-2',
                 footer: '',

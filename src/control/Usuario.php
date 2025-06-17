@@ -165,6 +165,44 @@ if ($tipo == "reiniciar_password") {
     }
     echo json_encode($arr_Respuesta);
 }
+
+// Nueva funcionalidad para actualizar contraseña
+if ($tipo == "new_password") {
+  
+  $id_usuario = $_POST['id'];
+  $nueva_password = $_POST['password'];
+  $token_email = $_POST['token'];
+  
+
+  $arr_Respuesta = array('status' => false, 'msg' => 'Error al actualizar contraseña');
+
+  
+  $datos_usuario = $objUsuario->buscarUsuarioById($id_usuario);
+  
+  if ($datos_usuario && $datos_usuario->reset_password == 1 && password_verify($datos_usuario->token_password, $token_email)) {
+      $resultado = $objUsuario->guardarNewPassword($id_usuario, $nueva_password);
+      
+      if ($resultado) {
+          $arr_Respuesta = array(
+              'status' => true, 
+              'msg' => 'Gracias por mantener tu cuenta protegida'
+          );
+      } else {
+          $arr_Respuesta = array(
+              'status' => false, 
+              'msg' => 'Error al guardar en la base de datos'
+          );
+      }
+  } else {
+      $arr_Respuesta = array(
+          'status' => false, 
+          'msg' => 'Token inválido o expirado'
+      );
+  }
+  
+  echo json_encode($arr_Respuesta);
+}
+
 if ($tipo=="sent_email_password") {
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
@@ -181,45 +219,7 @@ if ($tipo=="sent_email_password") {
 
 //Load Composer's autoloader (created by composer, not included with PHPMailer)
 
-/* ==========================================================
- *  TIPO: actualizar_password   (recibe id, password vía POST)
- * ========================================================*/
-// Nueva funcionalidad para actualizar contraseña
-if ($tipo == "new_password") {
-  
-    $id_usuario = $_POST['id'];
-    $nueva_password = $_POST['password'];
-    $token_email = $_POST['token'];
-    
 
-    $arr_Respuesta = array('status' => false, 'msg' => 'Error al actualizar contraseña');
-
-    
-    $datos_usuario = $objUsuario->buscarUsuarioById($id_usuario);
-    
-    if ($datos_usuario && $datos_usuario->reset_password == 1 && password_verify($datos_usuario->token_password, $token_email)) {
-        $resultado = $objUsuario->guardarNewPassword($id_usuario, $nueva_password);
-        
-        if ($resultado) {
-            $arr_Respuesta = array(
-                'status' => true, 
-                'msg' => 'Gracias por mantener tu cuenta protegida'
-            );
-        } else {
-            $arr_Respuesta = array(
-                'status' => false, 
-                'msg' => 'Error al guardar en la base de datos'
-            );
-        }
-    } else {
-        $arr_Respuesta = array(
-            'status' => false, 
-            'msg' => 'Token inválido o expirado'
-        );
-    }
-    
-    echo json_encode($arr_Respuesta);
-}
 
 
 //Create an instance; passing true enables exceptions
