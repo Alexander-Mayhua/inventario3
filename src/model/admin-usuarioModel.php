@@ -25,11 +25,29 @@ class UsuarioModel
         $sql = $this->conexion->query("UPDATE usuarios SET dni='$dni',nombres_apellidos='$nombres_apellidos',correo='$correo',telefono='$telefono',estado ='$estado' WHERE id='$id'");
         return $sql;
     }
+    
+
+
+    // Método mejorado para actualizar contraseña con encriptación
     public function actualizarPassword($id, $password)
     {
+    
         $sql = $this->conexion->query("UPDATE usuarios SET password ='$password' WHERE id='$id'");
         return $sql;
     }
+    
+    // Nuevo método para actualizar contraseña y limpiar datos de reset
+    public function actualizarPasswordYLimpiarReset($id, $password)
+    {
+        $password_secure = password_hash($password, PASSWORD_DEFAULT);
+        $sql = $this->conexion->query("UPDATE usuarios SET password ='$password_secure', reset_password='0', token_password='' WHERE id='$id'");
+        return $sql;
+    }
+
+
+
+
+
     public function updateResetPassword($id, $token, $estado)
     {
         $sql = $this->conexion->query("UPDATE usuarios SET token_password ='$token', reset_password='$estado' WHERE id='$id'");
@@ -109,5 +127,7 @@ class UsuarioModel
     }
 
 
+
+    
 
 }
