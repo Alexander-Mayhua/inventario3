@@ -185,24 +185,25 @@ if ($tipo=="sent_email_password") {
  *  TIPO: actualizar_password   (recibe id, password vía POST)
  * ========================================================*/
 // Nueva funcionalidad para actualizar contraseña
-if ($tipo == "actualizar_password_reset") {
+if ($tipo == "new_password") {
+  
     $id_usuario = $_POST['id'];
     $nueva_password = $_POST['password'];
     $token_email = $_POST['token'];
     
+
     $arr_Respuesta = array('status' => false, 'msg' => 'Error al actualizar contraseña');
+
     
-    // Verificar que el usuario existe y el token es válido
     $datos_usuario = $objUsuario->buscarUsuarioById($id_usuario);
     
     if ($datos_usuario && $datos_usuario->reset_password == 1 && password_verify($datos_usuario->token_password, $token_email)) {
-        // Actualizar contraseña y limpiar datos de reset
-        $resultado = $objUsuario->actualizarPasswordYLimpiarReset($id_usuario, $nueva_password);
+        $resultado = $objUsuario->guardarNewPassword($id_usuario, $nueva_password);
         
         if ($resultado) {
             $arr_Respuesta = array(
                 'status' => true, 
-                'msg' => 'Contraseña actualizada correctamente'
+                'msg' => 'Gracias por mantener tu cuenta protegida'
             );
         } else {
             $arr_Respuesta = array(
