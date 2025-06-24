@@ -27,8 +27,12 @@ curl_close($curl); // termina la sesión
 if ($err) {
     echo "cURL Error #:" . $err; // mostramos el error
 } else {
-    echo $response; // en caso de funcionar correctamente
+      // en caso de funcionar correctamente
    /* echo $_SESSION['sesion_sigi_id'];
     echo $_SESSION['sesion_sigi_token'];*/
+
+    $respuesta= json_decode($response);
+    print_r($respuesta);
+
 }
 ?>
