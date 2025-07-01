@@ -209,7 +209,7 @@ if ($tipo == "datos_registro") {
 
 
 }
-if ($tipo="buscar_movimiento_id") {
+if ($tipo=="buscar_movimiento_id") {
     $arr_Respuesta = array('status' => false, 'msg' => 'Error_Sesion');
     if ($objSesion->verificar_sesion_si_activa($id_sesion, $token)) {
         $id_movimiento = $_REQUEST['data'];
@@ -220,12 +220,16 @@ if ($tipo="buscar_movimiento_id") {
         $arrIes= $objInstitucion->buscarInstitucionById($arrMovimiento->id_ies);
         $arrDetalle= $objMovimiento->buscarDetalle_MovimientoByMovimiento($id_movimiento);
 
-        $array_bienes= array();
+        $arr_bienes= array();
        // $res_bien esto es objeto agregar con push, y agregar dentro el $arrRespuesta
 
         foreach ($arrDetalle as $bien) {
             $id_bien = $bien->id_bien;
             $res_bien= $objBien->buscarBienById($id_bien);
+            if ($res_bien) {
+                  array_push($arr_bienes,$res_bien);
+            }
+           
         }
 
         $arr_Respuesta['movimiento'] = $arrMovimiento;
@@ -235,6 +239,8 @@ if ($tipo="buscar_movimiento_id") {
         $arr_Respuesta['datos_ies'] = $arrIes;
         $arr_Respuesta['datos_usuario'] = $arrUsuario;
         $arr_Respuesta['detalle'] = $arrDetalle;
+
+        $arr_Respuesta['bienes'] = $arr_bienes;
 
         $arr_Respuesta['status'] = true;
         $arr_Respuesta['msg'] = 'correcto';
