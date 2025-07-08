@@ -33,11 +33,10 @@ if ($err) {
 
     $respuesta= json_decode($response);
    // print_r($respuesta);
+ $contenido_pdf = '';
+
+ $contenido_pdf .='
  
-
-?>
-<!--
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -53,7 +52,7 @@ if ($err) {
     h1{
       text-align: center;
       text-transform: uppercase;
-      font-size: 24px;
+      font-size: 15px;
       margin-bottom: 30px;
     }
 
@@ -82,7 +81,7 @@ if ($err) {
     th, td{
       text-align: center;
       padding: 6px;
-      font-size: 12px;
+      font-size: 10px;
     }
 
     /* Columnas con anchos aproximados */
@@ -127,9 +126,10 @@ if ($err) {
 
   <div class="field">ENTIDAD&nbsp;&nbsp;: <span>DIRECCIÓN REGIONAL DE EDUCACIÓN – AYACUCHO</span></div>
   <div class="field">ÁREA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span>OFICINA DE ADMINISTRACIÓN</span></div>
-  <div class="field">ORIGEN&nbsp;&nbsp;: <span class="underline"> <?php echo $respuesta->amb_origen->codigo.' - '.$respuesta->amb_origen->detalle; ?></span></div>
-  <div class="field">DESTINO&nbsp;: <span class="underline"> <?php echo $respuesta->amb_destino->codigo.' - '.$respuesta->amb_destino->detalle; ?></span></div>
-  <div class="field">MOTIVO&nbsp;(*) : <span class="underline">&nbsp; <?php echo $respuesta->movimiento->descripcion;?> </span></div>
+
+  <div class="field">ORIGEN&nbsp;&nbsp;: <span class="underline">'. $respuesta->amb_origen->codigo.' - '.$respuesta->amb_origen->detalle .'</span></div>
+  <div class="field">DESTINO&nbsp;: <span class="underline">'. $respuesta->amb_destino->codigo.' - '.$respuesta->amb_destino->detalle.'</span></div>
+  <div class="field">MOTIVO&nbsp;(*) : <span class="underline"> '. $respuesta->movimiento->descripcion.' </span></div>
 
   <table>
     <thead>
@@ -144,23 +144,29 @@ if ($err) {
       </tr>
     </thead>
     <tbody>
+ ';
+
+?>
+
+
         <?php
         $contador= 1;
         foreach($respuesta->detalle as $bien){
-            echo "<tr>";
-            echo "<td>".$contador."</td>";
-            echo "<td>".$bien->cod_patrimonial."</td>";
-            echo "<td>".$bien->denominacion."</td>";
-            echo "<td>".$bien->marca."</td>";
-            echo "<td>".$bien->modelo."</td>";
-            echo "<td>".$bien->color."</td>";
-            echo "<td>".$bien->estado_conservacion."</td>";
+            $contenido_pdf.= "<tr>";
+            $contenido_pdf.= "<td>".$contador."</td>";
+            $contenido_pdf.= "<td>".$bien->cod_patrimonial."</td>";
+            $contenido_pdf.= "<td>".$bien->denominacion."</td>";
+            $contenido_pdf.= "<td>".$bien->marca."</td>";
+            $contenido_pdf.= "<td>".$bien->modelo."</td>";
+            $contenido_pdf.= "<td>".$bien->color."</td>";
+            $contenido_pdf.= "<td>".$bien->estado_conservacion."</td>";
+            $contenido_pdf.= "</tr>";
            $contador+=1;
         }
-        ?>
+        
 
      
-
+ $contenido_pdf .='
     </tbody>
   </table>
 
@@ -179,7 +185,10 @@ if ($err) {
 
 </body>
 </html>
-    -->
+    ';
+    ?>
+
+
 <?php
 require_once('./vendor/tecnickcom/tcpdf/tcpdf.php');
 
@@ -192,11 +201,20 @@ $pdf->SetTitle('Reporte de Movimientos');
 // set margins
 $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
 
-// salto de pagina
+// salto de paginab automatico
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
 // set font
-$pdf->SetFont('dejavusans', '', 10);
+$pdf->SetFont('helvetica', 'B', 8);
+
+// add a page
+$pdf->AddPage();
+
+// output the HTML content
+$pdf->writeHTML($contenido_pdf);
+ob_clean();
+//Close and output PDF document
+$pdf->Output('sd', 'I');
 
 }
 
