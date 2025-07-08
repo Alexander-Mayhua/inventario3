@@ -220,15 +220,15 @@ if ($tipo=="buscar_movimiento_id") {
         $arrIes= $objInstitucion->buscarInstitucionById($arrMovimiento->id_ies);
         $arrDetalle= $objMovimiento->buscarDetalle_MovimientoByMovimiento($id_movimiento);
 
-        $arr_bienes= array();
+        $array_bienes= array();
        // $res_bien esto es objeto agregar con push, y agregar dentro el $arrRespuesta
 
         foreach ($arrDetalle as $bien) {
             $id_bien = $bien->id_bien;
             $res_bien= $objBien->buscarBienById($id_bien);
-            if ($res_bien) {
-                  array_push($arr_bienes,$res_bien);
-            }
+          
+                  array_push($array_bienes,$res_bien);
+            
            
         }
 
@@ -237,10 +237,9 @@ if ($tipo=="buscar_movimiento_id") {
         $arr_Respuesta['amb_destino'] = $arrAmbDestino;
         $arr_Respuesta['datos_usuario'] = $arrUsuario;
         $arr_Respuesta['datos_ies'] = $arrIes;
-        $arr_Respuesta['datos_usuario'] = $arrUsuario;
-        $arr_Respuesta['detalle'] = $arrDetalle;
 
-        $arr_Respuesta['bienes'] = $arr_bienes;
+
+        $arr_Respuesta['detalle'] = $array_bienes;
 
         $arr_Respuesta['status'] = true;
         $arr_Respuesta['msg'] = 'correcto';
