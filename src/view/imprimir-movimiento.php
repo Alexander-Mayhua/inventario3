@@ -54,7 +54,7 @@ if ($err) {
       text-transform: uppercase;
       font-size: 15px;
       margin-bottom: 30px;
-      
+   
     }
 
     /* Línea de datos (Entidad, Área, etc.) */
@@ -79,6 +79,7 @@ if ($err) {
     table, th, td{
       border: 1px solid #000;
     }
+      
     th, td{
       text-align: center;
       padding: 6px;
@@ -88,17 +89,17 @@ if ($err) {
     /* Columnas con anchos aproximados */
     .item-col   { width: 40px;  }
     .code-col   { width: 120px; }
-    .name-col   { width: 200px; }
-    .marca-col  { width: 100px; }
-    .color-col  { width: 80px;  }
-    .modelo-col { width: 100px; }
+    .name-col   { width: 60px; }
+    .marca-col  { width: 80px; }
+    .color-col  { width: 60px;  }
+    .modelo-col { width: 80px; }
     .estado-col { width: 80px;  }
 
     /* Línea de fecha */
     .date-line{
       text-align: right;
       margin-top: 30px;
-      font-size: 10px;
+      font-size: 12px;
     }
 
     /* Firmas */
@@ -165,28 +166,26 @@ if ($err) {
            $contador+=1;
         }
         
-
-     
- $contenido_pdf .='
-    </tbody>
-  </table>
-
-  <div class="date-line">Ayacucho, _____ de _____ del 2024</div>
-
-  <div class="signatures">
-    <div class="sig">
-      <hr />
-      <span>ENTREGUÉ CONFORME</span>
-    </div>
-    <div class="sig">
-      <hr />
-      <span>RECIBÍ CONFORME</span>
-    </div>
-  </div>
-
-</body>
-</html>
-    ';
+        $contenido_pdf .= '
+        </tbody>
+      </table>
+    
+      <div class="date-line">Ayacucho, _____ de _____ del 2024</div>
+    
+      <div style="margin-top: 150px; text-align: center;">
+        <div style="display: inline-block; width: 40%; margin-right: 8%; text-align: center;">
+          <div style="border-top: 1px solid #000; width: 100%; margin-bottom: 5px;"></div>
+          <span>ENTREGUÉ CONFORME</span>
+        </div>
+    
+        <div style="display: inline-block; width: 40%; text-align: center;">
+          <div style="border-top: 1px solid #000; width: 100%; margin-bottom: 5px;"></div>
+          <span>RECIBÍ CONFORME</span>
+        </div>
+      </div>
+    
+    </body>
+    </html>';
     ?>
 
 
@@ -195,64 +194,65 @@ require_once('./vendor/tecnickcom/tcpdf/tcpdf.php');
 
 
 class MYPDF extends TCPDF {
-    // Encabezado personalizado
-    public function Header() {
-        // Posicionar imágenes
-        $logoLeft = './assets/images/logo_izquierdo.png';
-        $logoRight = './assets/images/logo_derecho.png';
+  // Encabezado personalizado
+  public function Header() {
+    //$logoLeft = __DIR__ . '/../assets/images/logo_izquierdo.png';
+    //$logoRight = __DIR__ . '/../assets/images/logo_derecho.png';
 
-        // Insertar imagen izquierda
-        $this->Image($logoLeft, 15, 10, 25); // (archivo, x, y, ancho)
-        // Insertar imagen derecha
-        $this->Image($logoRight, 170, 10, 25);
+      // Insertar imagen izquierda
+      $this->Image('./src/view/pp/assets/images/logo_izquierdo.jpeg', 15, 4, 16.4); // (archivo, x, y, ancho)
+      // Insertar imagen derecha
+      $this->Image('./src/view/pp/assets/images/logo_derecho.jpg', 170, 2, 25);
 
-        // Título centrado
-        $this->SetY(5); // ajustar posición vertical
-        $this->SetFont('helvetica', 'B', 9);
-        $this->Cell(0, 5, 'GOBIERNO REGIONAL DE AYACUCHO', 0, 1, 'C');
-        $this->Cell(0, 5, 'DIRECCIÓN REGIONAL DE EDUCACIÓN DE AYACUCHO', 0, 1, 'C');
-        $this->SetFont('helvetica', '', 8);
-        $this->Cell(0, 5, 'DIRECCIÓN DE ADMINISTRACIÓN', 0, 1, 'C');
+      // Título centrado
+      $this->SetY(5); // ajustar posición vertical
+      $this->SetFont('helvetica', 'B', 9);
+      $this->Cell(0, 5, 'GOBIERNO REGIONAL DE AYACUCHO', 0, 1, 'C');
+      $this->Cell(0, 5, 'DIRECCIÓN REGIONAL DE EDUCACIÓN DE AYACUCHO', 0, 1, 'C');
+      $this->SetFont('helvetica', '', 8);
+      $this->Cell(0, 5, 'DIRECCIÓN DE ADMINISTRACIÓN', 0, 1, 'C');
 
-        // Línea doble azul (simulada con celdas)
-        $this->SetDrawColor(0, 64, 128); // color azul
-        $this->SetLineWidth(0.4);
-        $this->Line(15, 28, 195, 28);
-        $this->SetLineWidth(0.2);
-        $this->Line(15, 30, 195, 30);
+      // Línea doble azul (simulada con líneas)
+      $this->SetDrawColor(0, 64, 128); // color azul
+      $this->SetLineWidth(0.4);
+      $this->Line(15, 28, 195, 28); // primera línea
+      $this->SetLineWidth(0.2);
+      $this->Line(15, 30, 195, 30); // segunda línea
 
-        // Texto de ANEXO – 4
-        $this->SetY(28);
-        $this->SetFont('helvetica', 'B', 10);
-        $this->Cell(0, 5, 'ANEXO – 4 -', 0, 1, 'C');
+      // Texto de ANEXO – 4 debajo de las líneas
+      $this->SetY(30); // Mover más abajo para evitar que se monte sobre la línea
+      $this->SetFont('helvetica', 'B', 10);
+      $this->Cell(0, 5, 'ANEXO – 4 -', 0, 1, 'C');
 
-        // Espaciado para el contenido del PDF
-        $this->Ln(5);
-    }
+      // Espaciado para el contenido del PDF
+      $this->Ln(5);
+  }
 
+  // Pie de página personalizado
   public function Footer() {
-        $this->SetY(-20);
-        $this->SetFont('helvetica', '', 7);
+      $this->SetY(-20);
+      $this->SetFont('helvetica', '', 7);
 
-        $this->Line(15, $this->GetY(), 195, $this->GetY());
+      // Línea horizontal
+      $this->Line(15, $this->GetY(), 195, $this->GetY());
 
-        $html = '
-        <table width="100%" style="font-size:7px; padding-top:3px;">
-            <tr>
-                <td width="33%"></td>
-                <td width="34%" align="center">
-                    <a href="https://www.dreaya.gob.pe" style="color: #0000EE; text-decoration: underline;">www.dreaya.gob.pe</a>
-                </td>
-                <td width="33%" align="right">
-                    Jr. 28 de Julio N° 385 – Huamanga<br/>
-                    ☎ (066) 31-2364<br/>
-                    🏢 (066) 31-1395 Anexo 55001
-                </td>
-            </tr>
-        </table>';
-        
-        $this->writeHTML($html, true, false, false, false, '');
-    }
+      $html = '
+      <table width="100%" style="font-size:7px; padding-top:3px;">
+          <tr>
+              <td width="33%"></td>
+              <td width="34%" align="center">
+                  <a href="https://www.dreaya.gob.pe" style="color: #0000EE; text-decoration: underline;">www.dreaya.gob.pe</a>
+              </td>
+              <td width="33%" align="right">
+                  Jr. 28 de Julio N° 385 – Huamanga<br/>
+                  ☎ (066) 31-2364<br/>
+                  🏢 (066) 31-1395 Anexo 55001
+              </td>
+          </tr>
+      </table>';
+      
+      $this->writeHTML($html, true, false, false, false, '');
+  }
 }
 
 
