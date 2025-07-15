@@ -39,6 +39,6 @@ for ($i = 1; $i <= 12; $i++) {
     $sheet->setCellValue("D$i", "=");             // Igual
     $sheet->setCellValue("E$i", $numero * $i);    // Resultado
 }
-
+//MOSTRAS LOS DATOS QUE STAN EN BASE DE DATOS 
 $writer = new Xlsx($spreadsheet);
 $writer->save('hello world.xlsx');
