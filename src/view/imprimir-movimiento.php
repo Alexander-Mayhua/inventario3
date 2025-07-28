@@ -132,8 +132,10 @@ if ($err) {
   <div class="field">ORIGEN&nbsp;&nbsp;: <span class="underline">'. $respuesta->amb_origen->codigo.' - '.$respuesta->amb_origen->detalle .'</span></div>
   <div class="field">DESTINO&nbsp;: <span class="underline">'. $respuesta->amb_destino->codigo.' - '.$respuesta->amb_destino->detalle.'</span></div>
   <div class="field">MOTIVO&nbsp;(*) : <span class="underline"> '. $respuesta->movimiento->descripcion.' </span></div>
+<br>
+</br>
 
-  <table>
+  <table border="0" >
     <thead>
       <tr>
         <th class="item-col">ITEM</th>
@@ -169,8 +171,9 @@ if ($err) {
         $contenido_pdf .= '
         </tbody>
       </table>
-    
-      <div class="date-line">Ayacucho, _____ de _____ del 2024</div>
+    <br>
+</br>
+      <div class="date-line">Ayacucho, _____ de _____ del 2025</div>
     
       <div style="margin-top: 150px; text-align: center;">
         <div style="display: inline-block; width: 40%; margin-right: 8%; text-align: center;">
