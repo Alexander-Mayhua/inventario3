@@ -50,6 +50,8 @@ $contenido_pdf .= '</tbody></table>';
 
 // Fecha y firmas
 $contenido_pdf .= '
+<br>
+</br>
 <div style="text-align: right; margin-top: 30px; font-size: 12px;">
     Ayacucho, _____ de _____ del 2025
 </div>
